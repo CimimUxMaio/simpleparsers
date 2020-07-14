@@ -78,3 +78,13 @@ func parseDigit(input string) (*ParserOutput, error) {
 func parseLetter(input string) (*ParserOutput, error) {
 	return parseWithCondition(input, unicode.IsLetter)
 }
+
+func parseOptionaly(input string, parser Parser) (*ParserOutput, error) {
+	output, err := parser.Parse(input)
+
+	if err != nil {
+		output = &ParserOutput{Match: "", Remainder: input}
+	}
+
+	return output, nil
+}

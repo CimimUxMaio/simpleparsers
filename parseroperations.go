@@ -29,3 +29,18 @@ func KleenePlus(parser Parser) Parser {
 		},
 	}
 }
+
+// Optional - returns a parser that is optional. It never fails, if there is no match, matches with the empty string.
+func Optional(parser Parser) Parser {
+	return &genericParser{
+		parseMethod: func(input string) (*ParserOutput, error) {
+			return parseOptionaly(input, parser)
+		},
+	}
+}
+
+// KleeneStar - returns a parser that parses with the given parsser consecutively until there is no more matches.
+// If there is no matches, matches with the empty strin.
+func KleeneStar(parser Parser) Parser {
+	return Optional(KleenePlus(parser))
+}

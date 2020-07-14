@@ -12,8 +12,8 @@ var (
 
 func TestDigitParser(t *testing.T) {
 	var testCases []stringParserOutputTestCase = []stringParserOutputTestCase{
-		stringParserOutputTestCase{"1asdasd", NewParserOutput("1", "asdasd")},
-		stringParserOutputTestCase{"5012", NewParserOutput("5", "012")},
+		stringParserOutputTestCase{"1asdasd", newParserOutput("1", "asdasd")},
+		stringParserOutputTestCase{"5012", newParserOutput("5", "012")},
 		stringParserOutputTestCase{"hello", nil},
 		stringParserOutputTestCase{"+2-%2", nil},
 		stringParserOutputTestCase{"$3-%2", nil},
@@ -25,9 +25,9 @@ func TestDigitParser(t *testing.T) {
 
 func TestLetterParser(t *testing.T) {
 	var testCases []stringParserOutputTestCase = []stringParserOutputTestCase{
-		stringParserOutputTestCase{"a1231", NewParserOutput("a", "1231")},
-		stringParserOutputTestCase{"hello", NewParserOutput("h", "ello")},
-		stringParserOutputTestCase{"OlLeH", NewParserOutput("O", "lLeH")},
+		stringParserOutputTestCase{"a1231", newParserOutput("a", "1231")},
+		stringParserOutputTestCase{"hello", newParserOutput("h", "ello")},
+		stringParserOutputTestCase{"OlLeH", newParserOutput("O", "lLeH")},
 		stringParserOutputTestCase{"12345", nil},
 		stringParserOutputTestCase{"+23Abc", nil},
 		stringParserOutputTestCase{"$a245", nil},
@@ -38,10 +38,10 @@ func TestLetterParser(t *testing.T) {
 
 func TestAlfanumericParser(t *testing.T) {
 	var testCases []stringParserOutputTestCase = []stringParserOutputTestCase{
-		stringParserOutputTestCase{"a1231", NewParserOutput("a", "1231")},
-		stringParserOutputTestCase{"hello", NewParserOutput("h", "ello")},
-		stringParserOutputTestCase{"12345", NewParserOutput("1", "2345")},
-		stringParserOutputTestCase{"OlLeH", NewParserOutput("O", "lLeH")},
+		stringParserOutputTestCase{"a1231", newParserOutput("a", "1231")},
+		stringParserOutputTestCase{"hello", newParserOutput("h", "ello")},
+		stringParserOutputTestCase{"12345", newParserOutput("1", "2345")},
+		stringParserOutputTestCase{"OlLeH", newParserOutput("O", "lLeH")},
 		stringParserOutputTestCase{"+23Abc", nil},
 		stringParserOutputTestCase{"$a245", nil},
 	}
@@ -51,11 +51,11 @@ func TestAlfanumericParser(t *testing.T) {
 
 func TestWordParser(t *testing.T) {
 	var testCases []stringParserOutputTestCase = []stringParserOutputTestCase{
-		stringParserOutputTestCase{"hello world", NewParserOutput("hello", " world")},
-		stringParserOutputTestCase{"a1231", NewParserOutput("a", "1231")},
-		stringParserOutputTestCase{"asd123", NewParserOutput("asd", "123")},
-		stringParserOutputTestCase{"IusaqE123", NewParserOutput("IusaqE", "123")},
-		stringParserOutputTestCase{"dSa+DsA.", NewParserOutput("dSa", "+DsA.")},
+		stringParserOutputTestCase{"hello world", newParserOutput("hello", " world")},
+		stringParserOutputTestCase{"a1231", newParserOutput("a", "1231")},
+		stringParserOutputTestCase{"asd123", newParserOutput("asd", "123")},
+		stringParserOutputTestCase{"IusaqE123", newParserOutput("IusaqE", "123")},
+		stringParserOutputTestCase{"dSa+DsA.", newParserOutput("dSa", "+DsA.")},
 		stringParserOutputTestCase{"12345", nil},
 		stringParserOutputTestCase{"1aloha", nil},
 		stringParserOutputTestCase{"+23Abc", nil},
@@ -66,9 +66,9 @@ func TestWordParser(t *testing.T) {
 
 func TestNumberParser(t *testing.T) {
 	var testCases []stringParserOutputTestCase = []stringParserOutputTestCase{
-		stringParserOutputTestCase{"123123", NewParserOutput("123123", "")},
-		stringParserOutputTestCase{"9876asd", NewParserOutput("9876", "asd")},
-		stringParserOutputTestCase{"1hello", NewParserOutput("1", "hello")},
+		stringParserOutputTestCase{"123123", newParserOutput("123123", "")},
+		stringParserOutputTestCase{"9876asd", newParserOutput("9876", "asd")},
+		stringParserOutputTestCase{"1hello", newParserOutput("1", "hello")},
 		stringParserOutputTestCase{"+754//", nil},
 	}
 
@@ -79,11 +79,11 @@ func TestRegexParserEquivalentToWordParser(t *testing.T) {
 	regexParser, _ := NewRegexParser("[a-zA-Z]+") // Equivalent to wordParser
 
 	var testCases []stringParserOutputTestCase = []stringParserOutputTestCase{
-		stringParserOutputTestCase{"hello world", NewParserOutput("hello", " world")},
-		stringParserOutputTestCase{"a1231", NewParserOutput("a", "1231")},
-		stringParserOutputTestCase{"asd123", NewParserOutput("asd", "123")},
-		stringParserOutputTestCase{"IusaqE123", NewParserOutput("IusaqE", "123")},
-		stringParserOutputTestCase{"dSa+DsA.", NewParserOutput("dSa", "+DsA.")},
+		stringParserOutputTestCase{"hello world", newParserOutput("hello", " world")},
+		stringParserOutputTestCase{"a1231", newParserOutput("a", "1231")},
+		stringParserOutputTestCase{"asd123", newParserOutput("asd", "123")},
+		stringParserOutputTestCase{"IusaqE123", newParserOutput("IusaqE", "123")},
+		stringParserOutputTestCase{"dSa+DsA.", newParserOutput("dSa", "+DsA.")},
 		stringParserOutputTestCase{"12345", nil},
 		stringParserOutputTestCase{"1aloha", nil},
 		stringParserOutputTestCase{"+23Abc", nil},
@@ -96,8 +96,8 @@ func TestRegexParserCustom(t *testing.T) {
 	regexParser, _ := NewRegexParser("[3-9]+")
 
 	var testCases []stringParserOutputTestCase = []stringParserOutputTestCase{
-		stringParserOutputTestCase{"3412", NewParserOutput("34", "12")},
-		stringParserOutputTestCase{"9876asd", NewParserOutput("9876", "asd")},
+		stringParserOutputTestCase{"3412", newParserOutput("34", "12")},
+		stringParserOutputTestCase{"9876asd", newParserOutput("9876", "asd")},
 		stringParserOutputTestCase{"123123", nil},
 		stringParserOutputTestCase{"+754//", nil},
 		stringParserOutputTestCase{"1hello", nil},

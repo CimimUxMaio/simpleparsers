@@ -7,6 +7,10 @@ type stringParserOutputTestCase struct {
 	expectedOutput *ParserOutput
 }
 
+func newParserOutput(match, remainder string) *ParserOutput {
+	return &ParserOutput{match, remainder}
+}
+
 func assertEqualsParserOutput(t *testing.T, input string, expectedOutput *ParserOutput, actualOutput *ParserOutput) {
 	if expectedOutput == nil || actualOutput == nil {
 		if expectedOutput != actualOutput {
@@ -31,7 +35,7 @@ func throwTestFail(t *testing.T, input interface{}, expected interface{}, actual
 
 func parserAssertAllEqualsParserOutput(t *testing.T, parser Parser, testCases []stringParserOutputTestCase) {
 	for _, testCase := range testCases {
-		poutput := parser.Parse(testCase.input)
+		poutput, _ := parser.Parse(testCase.input)
 		assertEqualsParserOutput(t, testCase.input, testCase.expectedOutput, poutput)
 	}
 }

@@ -36,3 +36,17 @@ func NewIntegerParser() Parser {
 func NewWordParser() Parser {
 	return KleenePlus(NewLetterParser())
 }
+
+// NewCharParser - creates a Parser that matches only with the given character.
+func NewCharParser(char rune) Parser {
+	return &genericParser{
+		parseMethod: func(input string) (*ParserOutput, error) {
+			return parseWithCondition(input, func(match rune) bool { return match == char })
+		},
+	}
+}
+
+// NewNumberParser - creates a Parser that matches with every kind of number (integer or floating point).
+func NewNumberParser() Parser {
+	return Sequence(NewIntegerParser(), Optional(Sequence(NewCharParser('.'), NewIntegerParser())))
+}

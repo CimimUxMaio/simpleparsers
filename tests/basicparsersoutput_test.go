@@ -12,6 +12,7 @@ var (
 	alfaNumCharParser simpleparsers.Parser = simpleparsers.NewAlphanumericParser()
 	wordParser        simpleparsers.Parser = simpleparsers.NewWordParser()
 	integerParser     simpleparsers.Parser = simpleparsers.NewIntegerParser()
+	numberParser      simpleparsers.Parser = simpleparsers.NewNumberParser()
 )
 
 func TestDigitParser(t *testing.T) {
@@ -109,4 +110,29 @@ func TestRegexParserCustom(t *testing.T) {
 	}
 
 	assertAllEqualsParserOutput(t, regexParser, testCases)
+}
+
+func TestCharParser(t *testing.T) {
+	var testCases []stringParserOutputTestCase = []stringParserOutputTestCase{
+		stringParserOutputTestCase{"1+", nil},
+		stringParserOutputTestCase{"+", newParserOutput("+", "")},
+		stringParserOutputTestCase{"+asd123", newParserOutput("+", "asd123")},
+		stringParserOutputTestCase{"a1231", nil},
+		stringParserOutputTestCase{"", nil},
+	}
+
+	assertAllEqualsParserOutput(t, simpleparsers.NewCharParser('+'), testCases)
+}
+
+func TestNumberParser(t *testing.T) {
+	var testCases []stringParserOutputTestCase = []stringParserOutputTestCase{
+		stringParserOutputTestCase{"123123", newParserOutput("123123", "")},
+		stringParserOutputTestCase{"9876asd", newParserOutput("9876", "asd")},
+		stringParserOutputTestCase{"1.234", newParserOutput("1.234", "")},
+		stringParserOutputTestCase{"98.1world", newParserOutput("98.1", "world")},
+		stringParserOutputTestCase{"65.hi", newParserOutput("65", ".hi")},
+		stringParserOutputTestCase{"+754//", nil},
+	}
+
+	assertAllEqualsParserOutput(t, numberParser, testCases)
 }

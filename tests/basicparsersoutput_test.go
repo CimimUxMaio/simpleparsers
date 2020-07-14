@@ -11,7 +11,7 @@ var (
 	letterParser      simpleparsers.Parser = simpleparsers.NewLetterParser()
 	alfaNumCharParser simpleparsers.Parser = simpleparsers.NewAlphanumericParser()
 	wordParser        simpleparsers.Parser = simpleparsers.NewWordParser()
-	numberParser      simpleparsers.Parser = simpleparsers.NewIntegerParser()
+	integerParser     simpleparsers.Parser = simpleparsers.NewIntegerParser()
 )
 
 func TestDigitParser(t *testing.T) {
@@ -68,7 +68,7 @@ func TestWordParser(t *testing.T) {
 	parserAssertAllEqualsParserOutput(t, wordParser, testCases)
 }
 
-func TestNumberParser(t *testing.T) {
+func TestIntegerParser(t *testing.T) {
 	var testCases []stringParserOutputTestCase = []stringParserOutputTestCase{
 		stringParserOutputTestCase{"123123", newParserOutput("123123", "")},
 		stringParserOutputTestCase{"9876asd", newParserOutput("9876", "asd")},
@@ -76,7 +76,7 @@ func TestNumberParser(t *testing.T) {
 		stringParserOutputTestCase{"+754//", nil},
 	}
 
-	parserAssertAllEqualsParserOutput(t, numberParser, testCases)
+	parserAssertAllEqualsParserOutput(t, integerParser, testCases)
 }
 
 func TestRegexParserEquivalentToWordParser(t *testing.T) {

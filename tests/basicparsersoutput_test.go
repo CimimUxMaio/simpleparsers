@@ -24,7 +24,7 @@ func TestDigitParser(t *testing.T) {
 		stringParserOutputTestCase{"asd32", nil},
 	}
 
-	parserAssertAllEqualsParserOutput(t, digitParser, testCases)
+	assertAllEqualsParserOutput(t, digitParser, testCases)
 }
 
 func TestLetterParser(t *testing.T) {
@@ -37,7 +37,7 @@ func TestLetterParser(t *testing.T) {
 		stringParserOutputTestCase{"$a245", nil},
 	}
 
-	parserAssertAllEqualsParserOutput(t, letterParser, testCases)
+	assertAllEqualsParserOutput(t, letterParser, testCases)
 }
 
 func TestAlfanumericParser(t *testing.T) {
@@ -50,7 +50,7 @@ func TestAlfanumericParser(t *testing.T) {
 		stringParserOutputTestCase{"$a245", nil},
 	}
 
-	parserAssertAllEqualsParserOutput(t, alfaNumCharParser, testCases)
+	assertAllEqualsParserOutput(t, alfaNumCharParser, testCases)
 }
 
 func TestWordParser(t *testing.T) {
@@ -65,7 +65,7 @@ func TestWordParser(t *testing.T) {
 		stringParserOutputTestCase{"+23Abc", nil},
 	}
 
-	parserAssertAllEqualsParserOutput(t, wordParser, testCases)
+	assertAllEqualsParserOutput(t, wordParser, testCases)
 }
 
 func TestIntegerParser(t *testing.T) {
@@ -76,7 +76,7 @@ func TestIntegerParser(t *testing.T) {
 		stringParserOutputTestCase{"+754//", nil},
 	}
 
-	parserAssertAllEqualsParserOutput(t, integerParser, testCases)
+	assertAllEqualsParserOutput(t, integerParser, testCases)
 }
 
 func TestRegexParserEquivalentToWordParser(t *testing.T) {
@@ -93,7 +93,7 @@ func TestRegexParserEquivalentToWordParser(t *testing.T) {
 		stringParserOutputTestCase{"+23Abc", nil},
 	}
 
-	parserAssertAllEqualsParserOutput(t, regexParser, testCases)
+	assertAllEqualsParserOutput(t, regexParser, testCases)
 }
 
 func TestRegexParserCustom(t *testing.T) {
@@ -108,5 +108,5 @@ func TestRegexParserCustom(t *testing.T) {
 		stringParserOutputTestCase{"hello world", nil},
 	}
 
-	parserAssertAllEqualsParserOutput(t, regexParser, testCases)
+	assertAllEqualsParserOutput(t, regexParser, testCases)
 }

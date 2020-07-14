@@ -37,7 +37,7 @@ func throwTestFail(t *testing.T, input interface{}, expected interface{}, actual
 	t.Errorf("For input: \"%s\", the expected value was: \"%s\" but got: \"%s\" instead.", input, expected, actual)
 }
 
-func parserAssertAllEqualsParserOutput(t *testing.T, parser simpleparsers.Parser, testCases []stringParserOutputTestCase) {
+func assertAllEqualsParserOutput(t *testing.T, parser simpleparsers.Parser, testCases []stringParserOutputTestCase) {
 	for _, testCase := range testCases {
 		poutput, _ := parser.Parse(testCase.input)
 		assertEqualsParserOutput(t, testCase.input, testCase.expectedOutput, poutput)

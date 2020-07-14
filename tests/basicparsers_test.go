@@ -1,13 +1,17 @@
-package simpleparsers
+package tests
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/cimimuxmaio/simpleparsers"
+)
 
 var (
-	digitParser       Parser = NewDigitParser()
-	letterParser      Parser = NewLetterParser()
-	alfaNumCharParser Parser = NewAlphanumericParser()
-	wordParser        Parser = NewWordParser()
-	numberParser      Parser = NewIntegerParser()
+	digitParser       simpleparsers.Parser = simpleparsers.NewDigitParser()
+	letterParser      simpleparsers.Parser = simpleparsers.NewLetterParser()
+	alfaNumCharParser simpleparsers.Parser = simpleparsers.NewAlphanumericParser()
+	wordParser        simpleparsers.Parser = simpleparsers.NewWordParser()
+	numberParser      simpleparsers.Parser = simpleparsers.NewIntegerParser()
 )
 
 func TestDigitParser(t *testing.T) {
@@ -76,7 +80,7 @@ func TestNumberParser(t *testing.T) {
 }
 
 func TestRegexParserEquivalentToWordParser(t *testing.T) {
-	regexParser, _ := NewRegexParser("[a-zA-Z]+") // Equivalent to wordParser
+	regexParser, _ := simpleparsers.NewRegexParser("[a-zA-Z]+") // Equivalent to wordParser
 
 	var testCases []stringParserOutputTestCase = []stringParserOutputTestCase{
 		stringParserOutputTestCase{"hello world", newParserOutput("hello", " world")},
@@ -93,7 +97,7 @@ func TestRegexParserEquivalentToWordParser(t *testing.T) {
 }
 
 func TestRegexParserCustom(t *testing.T) {
-	regexParser, _ := NewRegexParser("[3-9]+")
+	regexParser, _ := simpleparsers.NewRegexParser("[3-9]+")
 
 	var testCases []stringParserOutputTestCase = []stringParserOutputTestCase{
 		stringParserOutputTestCase{"3412", newParserOutput("34", "12")},

@@ -1,17 +1,21 @@
-package simpleparsers
+package tests
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/cimimuxmaio/simpleparsers"
+)
 
 type stringParserOutputTestCase struct {
 	input          string
-	expectedOutput *ParserOutput
+	expectedOutput *simpleparsers.ParserOutput
 }
 
-func newParserOutput(match, remainder string) *ParserOutput {
-	return &ParserOutput{match, remainder}
+func newParserOutput(match, remainder string) *simpleparsers.ParserOutput {
+	return &simpleparsers.ParserOutput{Match: match, Remainder: remainder}
 }
 
-func assertEqualsParserOutput(t *testing.T, input string, expectedOutput *ParserOutput, actualOutput *ParserOutput) {
+func assertEqualsParserOutput(t *testing.T, input string, expectedOutput *simpleparsers.ParserOutput, actualOutput *simpleparsers.ParserOutput) {
 	if expectedOutput == nil || actualOutput == nil {
 		if expectedOutput != actualOutput {
 			if expectedOutput == nil {
@@ -33,7 +37,7 @@ func throwTestFail(t *testing.T, input interface{}, expected interface{}, actual
 	t.Errorf("For input: \"%s\", the expected value was: \"%s\" but got: \"%s\" instead.", input, expected, actual)
 }
 
-func parserAssertAllEqualsParserOutput(t *testing.T, parser Parser, testCases []stringParserOutputTestCase) {
+func parserAssertAllEqualsParserOutput(t *testing.T, parser simpleparsers.Parser, testCases []stringParserOutputTestCase) {
 	for _, testCase := range testCases {
 		poutput, _ := parser.Parse(testCase.input)
 		assertEqualsParserOutput(t, testCase.input, testCase.expectedOutput, poutput)

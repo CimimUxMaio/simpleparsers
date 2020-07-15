@@ -1,7 +1,8 @@
 package simpleparsers
 
-// Sequence - given two parsers, returns a new one that is equivalent to parsing with
-// parser1 and parser2 consecutively.
+// Sequence :
+// Given two parsers, returns a new one that parses as the two parsers consecutively, using the remainder of the first one as input for the second.
+// If for a certain input either parser fails, the resulting parser of sequencing both will also fail for this input.
 func Sequence(parser1 Parser, parser2 Parser) Parser {
 	return &genericParser{
 		parseMethod: func(input string) (*ParserOutput, error) {
@@ -10,8 +11,9 @@ func Sequence(parser1 Parser, parser2 Parser) Parser {
 	}
 }
 
-// Either - given two parsers, returns a parser that returns the result of parsing with parser1.
-// If it does not match anything, returns the result of parsing with parser2.
+// Either :
+// Given two parsers, returns a new one that parses a certain input as the first one. If it fails, parses as the second.
+// If both fail then this parser will also fail.
 func Either(parser1 Parser, parser2 Parser) Parser {
 	return &genericParser{
 		parseMethod: func(input string) (*ParserOutput, error) {
@@ -20,8 +22,9 @@ func Either(parser1 Parser, parser2 Parser) Parser {
 	}
 }
 
-// KleenePlus - returns a parser that parses with the given parser consecutively until there is no more matches.
-// If there is no matches returns an error.
+// KleenePlus :
+// Returns a parser that parses a certain input as the given parser iteratively until there is no more matches.
+// If there is no matches, the parser returns an error.
 func KleenePlus(parser Parser) Parser {
 	return &genericParser{
 		parseMethod: func(input string) (*ParserOutput, error) {
@@ -30,7 +33,9 @@ func KleenePlus(parser Parser) Parser {
 	}
 }
 
-// Optional - returns a parser that is optional. It never fails, if there is no match, matches with the empty string.
+// Optional :
+// Returns a parser that parses a certain input as the given parser iteratively until there is no more matches.
+// If there is no matches, the parser returns an error.
 func Optional(parser Parser) Parser {
 	return &genericParser{
 		parseMethod: func(input string) (*ParserOutput, error) {
@@ -39,8 +44,9 @@ func Optional(parser Parser) Parser {
 	}
 }
 
-// KleeneStar - returns a parser that parses with the given parsser consecutively until there is no more matches.
-// If there is no matches, matches with the empty strin.
+// KleeneStar :
+// Returns a parser that parses a certain input as the given parser iteratively until there is no more matches.
+// If there is no matches, the parser matches the empty string ("").
 func KleeneStar(parser Parser) Parser {
 	return Optional(KleenePlus(parser))
 }

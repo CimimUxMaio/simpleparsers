@@ -9,22 +9,22 @@ A package with functions to create and combine parsers.
 
 ## Built-in parsers
 
-- [RegexParser](###RegexParser)
-- [DigitParser](###DigitParser)
-- [LetterParser](###LetterParser)
-- [AlphanumericParser](###AlphanumericParser)
-- [CharParser](###CharParser)
-- [WordParser](###WordParser)
-- [IntegerParser](###IntegerParser)
-- [NumberParser](###NumberParser)
+- [RegexParser](###regexparser)
+- [DigitParser](###digitparser)
+- [LetterParser](###letterparser)
+- [AlphanumericParser](###alphanumericparser)
+- [CharParser](###charparser)
+- [WordParser](###wordparser)
+- [IntegerParser](###integerparser)
+- [NumberParser](###numberparser)
 
 ## Parser operations
 
-- [Sequence/2](###Sequence)
-- [Either/2](###Either)
-- [KleenePlus/1](###KleenePlus)
-- [KleeneStar/1](###KleeneStar)
-- [Optional/1](###Optional)
+- [Sequence/2](###sequence)
+- [Either/2](###either)
+- [KleenePlus/1](###kleenePlus)
+- [KleeneStar/1](###kleeneStar)
+- [Optional/1](###optional)
 
 ---
 
@@ -60,7 +60,7 @@ Created with `NewLetterParser()`. Parses a string matching the first character i
 
 Created with `NewAlphanumericParser()`. Parses a string matching the first character if it is either a _letter_ or a _digit_ according to `unicode.IsLetter` and `unicode.IsDigit`.
 
-It is equivalent to: [`Either(NewLetterParser(), NewDigitParser())`](###Either)
+It is equivalent to: [`Either(NewLetterParser(), NewDigitParser())`](###either)
 
 ##### Examples:
 
@@ -78,7 +78,7 @@ Created with `NewCharParser(<a_character>)`. Parses a string matching the first 
 
 Created with `NewLetterParser()`. Parses a string matching the first word (sequence of _letters_).
 
-It is equivalent to: [`KleenePlus(NewLetterParser())`](###KleenePlus)
+It is equivalent to: [`KleenePlus(NewLetterParser())`](###kleenePlus)
 
 ##### Examples:
 
@@ -88,7 +88,7 @@ It is equivalent to: [`KleenePlus(NewLetterParser())`](###KleenePlus)
 
 Created with `NewIntegerParser()`. Parses a string matching the first integer number (sequence of _digits_).
 
-It is equivalent to: [`KleenePlus(NewDigitParser())`](###KleenePlus)
+It is equivalent to: [`KleenePlus(NewDigitParser())`](###kleenePlus)
 
 ##### Examples:
 
@@ -104,8 +104,8 @@ It is equivalent to:
 
 ##### See:
 
-- [Sequence/1](###Sequence)
-- [Optional/1](###Optional)
+- [Sequence/1](###sequence)
+- [Optional/1](###optional)
 
 ##### Examples:
 

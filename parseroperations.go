@@ -50,3 +50,26 @@ func Optional(parser Parser) Parser {
 func KleeneStar(parser Parser) Parser {
 	return Optional(KleenePlus(parser))
 }
+
+// Consume :
+// Returns a parser that parses a certain input as the given parser.
+// If it matches, ignores the matching string, returning: &ParserOutput{ Match: "", Remainder: remainder }
+// If there is no match, returns an error.
+func Consume(parser Parser) Parser {
+	return &genericParser{
+		parseMethod: func(input string) (*ParserOutput, error) {
+			return parseAndIgnoreMatch(input, parser)
+		},
+	}
+}
+
+// Conditional :
+// Returns a parser that parses a certain input as the given parser.
+// It will only match with matches that satisfy the given condition.
+func Conditional(parser Parser, condition func(match string) bool) Parser {
+	return &genericParser{
+		parseMethod: func(input string) (*ParserOutput, error) {
+			return parseWithCondition(input, parser, condition)
+		},
+	}
+}

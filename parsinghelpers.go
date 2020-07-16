@@ -4,9 +4,22 @@ import (
 	"errors"
 	"reflect"
 	"runtime"
-	"strings"
-	"unicode"
 )
+
+func parseAny(input string) (*ParserOutput, error) {
+	if len(input) == 0 {
+		return nil, errors.New("no character match for empty string")
+	}
+
+	match := string(input[0])
+	remainder := ""
+
+	if len(input) > 1 {
+		remainder = input[1:]
+	}
+
+	return &ParserOutput{Match: match, Remainder: remainder}, nil
+}
 
 func parseConsecutively(parser1 Parser, parser2 Parser, input string) (*ParserOutput, error) {
 	output1, err1 := parser1.Parse(input)
@@ -53,31 +66,46 @@ func parseIterativelyAtLeastOnce(parser Parser, input string) (*ParserOutput, er
 	return &ParserOutput{Match: longuestMatch, Remainder: remainder}, nil
 }
 
-func parseWithCondition(input string, condition func(r rune) bool) (*ParserOutput, error) {
-	errNoMatch := errors.New("No match found for character with condition: " + runtime.FuncForPC(reflect.ValueOf(condition).Pointer()).Name() + " and input: \"" + input + "\"")
-	if len(input) == 0 {
-		return nil, errNoMatch
+// func parseWithCondition(input string, condition func(match string) bool) (*ParserOutput, error) {
+// 	errNoMatch := errors.New("No match found for character with condition: " + runtime.FuncForPC(reflect.ValueOf(condition).Pointer()).Name() + " and input: \"" + input + "\".")
+// 	if len(input) == 0 {
+// 		return nil, errNoMatch
+// 	}
+
+// 	head := rune(input[0])
+
+// 	if !condition(head) {
+// 		return nil, errNoMatch
+// 	}
+
+// 	match := string(head)
+// 	output := &ParserOutput{Match: match, Remainder: strings.TrimPrefix(input, match)}
+
+// 	return output, nil
+// }
+
+func parseWithCondition(input string, parser Parser, condition func(string) bool) (*ParserOutput, error) {
+	output, err := parser.Parse(input)
+
+	if err != nil {
+		return nil, err
 	}
 
-	head := rune(input[0])
-
-	if !condition(head) {
+	if !condition(output.Match) {
+		errNoMatch := errors.New("no match found for character with condition: " + runtime.FuncForPC(reflect.ValueOf(condition).Pointer()).Name() + " and input: \"" + input + "\"")
 		return nil, errNoMatch
 	}
-
-	match := string(head)
-	output := &ParserOutput{Match: match, Remainder: strings.TrimPrefix(input, match)}
 
 	return output, nil
 }
 
-func parseDigit(input string) (*ParserOutput, error) {
-	return parseWithCondition(input, unicode.IsDigit)
-}
+// func parseDigit(input string) (*ParserOutput, error) {
+// 	return parseWithCondition(input, unicode.IsDigit)
+// }
 
-func parseLetter(input string) (*ParserOutput, error) {
-	return parseWithCondition(input, unicode.IsLetter)
-}
+// func parseLetter(input string) (*ParserOutput, error) {
+// 	return parseWithCondition(input, unicode.IsLetter)
+// }
 
 func parseOptionaly(input string, parser Parser) (*ParserOutput, error) {
 	output, err := parser.Parse(input)
@@ -87,4 +115,14 @@ func parseOptionaly(input string, parser Parser) (*ParserOutput, error) {
 	}
 
 	return output, nil
+}
+
+func parseAndIgnoreMatch(input string, parser Parser) (*ParserOutput, error) {
+	output, err := parser.Parse(input)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &ParserOutput{Match: "", Remainder: output.Remainder}, nil
 }

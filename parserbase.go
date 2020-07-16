@@ -44,7 +44,7 @@ func (rp *regexParser) Parse(input string) (*ParserOutput, error) {
 	matchLocation := rp.regex.FindStringIndex(input)
 
 	if matchLocation == nil || matchLocation[0] != 0 {
-		return nil, errors.New("No match found for regex: \"" + rp.regex.String() + "\" and input: \"" + input + "\"")
+		return nil, errors.New("no match found for regex: \"" + rp.regex.String() + "\" and input: \"" + input + "\"")
 	}
 
 	match := input[matchLocation[0]:matchLocation[1]]

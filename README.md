@@ -10,6 +10,7 @@ A package with functions to create and combine parsers.
 ## Built-in parsers
 
 - [RegexParser](#regexparser)
+- [AnyCharParser](#anycharparser)
 - [DigitParser](#digitparser)
 - [LetterParser](#letterparser)
 - [AlphanumericParser](#alphanumericparser)
@@ -25,6 +26,8 @@ A package with functions to create and combine parsers.
 - [KleenePlus/1](#kleenePlus)
 - [KleeneStar/1](#kleeneStar)
 - [Optional/1](#optional)
+- [Consume/1](#consume)
+- [Conditional/2](#conditional)
 
 ---
 
@@ -38,23 +41,102 @@ Created with `NewRegexParser(<regex>)`. Parses a string matching a prefix that m
 
 ##### Examples:
 
-**TODO**
+```
+regexParser, _ := NewRegexParser("hello (world )+")
+
+
+regexParser.Parse("hello world")
+> &ParserOutput{ Match: "hello world", Remainder: ""}, nil
+
+
+regexParser.Parse("hello world world world bananas")
+> &ParserOutput{ Match: "hello world world world ", Remainder: "bananas" }, nil
+
+
+regexParser.Parse("A creative sentence.")
+> nil, err
+
+err.Error()
+> No match found for regex: "hello (world )+" and input: "A creative sentence.".
+```
+
+### AnyCharParser
+
+Created with `NewAnyCharParser`. Parses a string matching any character.
+
+##### Examples:
+
+```
+anyParser := NewAnyCharParser()
+
+
+anyParser.Parse("aloha")
+> &ParserOutput{ Match: "a", Remainder: "loha"}, nil
+
+
+anyParser.Parse("9876")
+> &ParserOutput{ Match: "9", Remainder: "876"}, nil
+
+
+anyParser.Parse("!=(&/($")
+> &ParserOutput{ Match: "!", Remainder: "=(&/($"}, nil
+
+
+anyParser.Parse("")
+> nil, err
+
+err.Error()
+> No character match for empty string.
+
+```
 
 ### DigitParser
 
 Created with `NewDigitParser()`. Parses a string matching the first character if it is a _digit_ according to `unicode.IsDigit`.
 
+It is equivalent to: [Conditional(NewAnyCharParser(), startsWithDigit)](#conditional)
+
+where `startsWithDigit` returns true if the head of the string is in fact a _digit_.
+
 ##### Examples:
 
-**TODO**
+```
+digitParser := NewDigitParser()
+
+digitParser.Parse("123hello")
+> &ParserOutput{ Match: "1", Remainder: "23hello" }, nil
+
+
+digitParser.Parse("hello")
+> nil, err
+
+err.Error()
+> No match found for character with condition: "github.com/cimimuxmaio/simpleparsers.startsWithDigit" and input: "hello".
+```
 
 ### LetterParser
 
 Created with `NewLetterParser()`. Parses a string matching the first character if it is a _letter_ according to `unicode.IsLetter`.
 
+It is equivalent to: [Conditional(NewAnyCharParser(), startsWithLetter)](#conditional)
+
+where `startsWithLetter` returns true if the head of the string is in fact a _letter_.
+
 ##### Examples:
 
-**TODO**
+```
+letterParser := NewLetterParser()
+
+letterParser.Parse("bananas!")
+> &ParserOutput{ Match: "b", Remainder: "ananas!" }, nil
+
+
+letterParser.Parse("1 this should fail")
+> nil, err
+
+err.Error()
+> No match found for character with condition: "github.com/cimimuxmaio/simpleparsers.startsWithLetter" and input: "1 this should fail".
+```
 
 ### AlphanumericParser
 
@@ -64,15 +146,48 @@ It is equivalent to: [`Either(NewLetterParser(), NewDigitParser())`](#either)
 
 ##### Examples:
 
-**TODO**
+```
+alphaParser := NewAlphanumericParser()
+
+alphaParser.Parse("2020")
+> &ParserOutput{ Match: "2", Remainder: "020" }, nil
+
+
+alphaParser.Parse("abcdefg...")
+> &ParserOutput{ Match: "a", Remainder: "bcdefg..." }, nil
+
+
+alphaParser.Parse("!!! :(")
+> nil, err
+
+err.Error()
+> No match found for character with condition: "github.com/cimimuxmaio/simpleparsers.startsWithDigit" and input: "!!! :(".
+```
 
 ### CharParser
 
 Created with `NewCharParser(<a_character>)`. Parses a string matching the first character only if it is the same as the given character.
 
+It is equivalent to:
+`Conditional(NewAnyCharParser(), func(match string) bool { return startsWithChar(match, char) })`
+
+where `startsWithChar` returns true if `match` starts with `char`.
+
 ##### Examples:
 
-**TODO**
+```
+charParser := NewCharParser('-')
+
+charParser.Parse("-+/*")
+> &ParserOutput{ Match: "-", Remainder: "+/*" }, nil
+
+
+letterParser.Parse("sample text")
+> nil, err
+
+err.Error()
+> No match found for character with condition: "github.com/cimimuxmaio/simpleparsers.NewCharParser.func1.1" and input: "sample text". // Should be improved
+```
 
 ### WordParser
 
@@ -82,7 +197,22 @@ It is equivalent to: [`KleenePlus(NewLetterParser())`](#kleenePlus)
 
 ##### Examples:
 
-**TODO**
+```
+wordParser := NewWordParser()
+
+wordParser.Parse("hello world!")
+> &ParserOutput{ Match: "hello", Remainder: " world!" }
+
+
+wordParser.Parse("Hi987 Wo789!")
+> &ParserOutput{ Match: "Hi", Remainder: "987 Wo789!" }
+
+wordParser.Parse("123.0")
+
+err.Error()
+> No match found for character with condition: "github.com/cimimuxmaio/simpleparsers.startsWithLetter" and input: "123.0".
+
+```
 
 ### IntegerParser
 
@@ -92,7 +222,23 @@ It is equivalent to: [`KleenePlus(NewDigitParser())`](#kleenePlus)
 
 ##### Examples:
 
-**TODO**
+```
+integerParser := NewIntegerParser()
+
+integerParser.Parse("2020")
+> &ParserOutput{ Match: "2020", Remainder: "" }
+
+
+integerParser.Parse("123.0")
+> &ParserOutput{ Match: "123", Remainder: ".0" }
+
+integerParser.Parse("Hola mundo")
+> nil, err
+
+err.Error()
+> No match found for character with condition: "github.com/cimimuxmaio/simpleparsers.startsWithDigit" and input: "Hola mundo".
+
+```
 
 ### NumberParser
 
@@ -109,7 +255,28 @@ It is equivalent to:
 
 ##### Examples:
 
-**TODO**
+```
+numberParser := NewNumberParser()
+
+numberParser.Parse("2020")
+> &ParserOutput{ Match: "2020", Remainder: "" }
+
+
+numberParser.Parse("123.0")
+> &ParserOutput{ Match: "123.0", Remainder: "" }
+
+
+numberParser.Parse("999.Nice!")
+> &ParserOutput{ Match: "999", Remainder: ".Nice!" }
+
+
+numberParser.Parse("Parsers!")
+> nil, err
+
+err.Error()
+> No match found for character with condition: "github.com/cimimuxmaio/simpleparsers.startsWithDigit" and input: "Parsers!".
+
+```
 
 ---
 
@@ -158,6 +325,27 @@ If there is **no** matches, the parser matches the empty string (`""`).
 Returns a parser that parses a certain input as the given parser iteratively until there is no more matches.
 
 If there is **no** matches, the parser returns an error.
+
+##### Examples:
+
+**TODO**
+
+### Consume
+
+Returns a parser that parses a certain input as the given parser.
+
+If it matches, ignores the matching string, returning: `&ParserOutput{ Match: "", Remainder: remainder }`
+If there is **no** match, returns an error.
+
+##### Examples:
+
+**TODO**
+
+### Conditional
+
+Returns a parser that parses a certain input as the given parser.
+
+It will only match with strings that satisfy the given condition.
 
 ##### Examples:
 

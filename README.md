@@ -5,6 +5,8 @@
 
 A package with functions to create and combine parsers.
 
+Just a fun project for learning Go :D
+
 ---
 
 ## Built-in parsers

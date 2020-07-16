@@ -112,7 +112,7 @@ digitParser.Parse("hello")
 > nil, err
 
 err.Error()
-> No match found for character with condition: "github.com/cimimuxmaio/simpleparsers.startsWithDigit" and input: "hello".
+> No match found that satisfies the condition:: "github.com/cimimuxmaio/simpleparsers.startsWithDigit" with input: "hello".
 ```
 
 ### LetterParser
@@ -136,7 +136,7 @@ letterParser.Parse("1 this should fail")
 > nil, err
 
 err.Error()
-> No match found for character with condition: "github.com/cimimuxmaio/simpleparsers.startsWithLetter" and input: "1 this should fail".
+> No match found that satisfies the condition: "github.com/cimimuxmaio/simpleparsers.startsWithLetter" with input: "1 this should fail".
 ```
 
 ### AlphanumericParser
@@ -162,7 +162,7 @@ alphaParser.Parse("!!! :(")
 > nil, err
 
 err.Error()
-> No match found for character with condition: "github.com/cimimuxmaio/simpleparsers.startsWithDigit" and input: "!!! :(".
+> No match found that satisfies the condition: "github.com/cimimuxmaio/simpleparsers.startsWithDigit" with input: "!!! :(".
 ```
 
 ### CharParser
@@ -211,7 +211,7 @@ wordParser.Parse("Hi987 Wo789!")
 wordParser.Parse("123.0")
 
 err.Error()
-> No match found for character with condition: "github.com/cimimuxmaio/simpleparsers.startsWithLetter" and input: "123.0".
+> No match found that satisfies the condition: "github.com/cimimuxmaio/simpleparsers.startsWithLetter" with input: "123.0".
 
 ```
 
@@ -237,7 +237,7 @@ integerParser.Parse("Hola mundo")
 > nil, err
 
 err.Error()
-> No match found for character with condition: "github.com/cimimuxmaio/simpleparsers.startsWithDigit" and input: "Hola mundo".
+> No match found that satisfies the condition: "github.com/cimimuxmaio/simpleparsers.startsWithDigit" with input: "Hola mundo".
 
 ```
 
@@ -275,7 +275,7 @@ numberParser.Parse("Parsers!")
 > nil, err
 
 err.Error()
-> No match found for character with condition: "github.com/cimimuxmaio/simpleparsers.startsWithDigit" and input: "Parsers!".
+> No match found that satisfies the condition: "github.com/cimimuxmaio/simpleparsers.startsWithDigit" with input: "Parsers!".
 
 ```
 
@@ -303,14 +303,14 @@ parser.Parse("K9 team")
 > nil, err
 
 err.Error()
-> No match found for character with condition: "github.com/cimimuxmaio/simpleparsers.startsWithDigit" and input: "K9 team".
+> No match found that satisfies the condition: "github.com/cimimuxmaio/simpleparsers.startsWithDigit" with input: "K9 team".
 
 
 parser.Parse("2020")
 > nil, err
 
 err.Error()
-> No match found for character with condition: "github.com/cimimuxmaio/simpleparsers.startsWithLetter" and input: "020".
+> No match found that satisfies the condition: "github.com/cimimuxmaio/simpleparsers.startsWithLetter" with input: "020".
 ```
 
 ### Either
@@ -335,7 +335,7 @@ parser.Parse("¡Hello world!")
 > nil, err
 
 err.Error()
-> No match found for character with condition: "github.com/cimimuxmaio/simpleparsers.startsWithLetter" and input: "¡Hello world!".
+> No match found that satisfies the condition: "github.com/cimimuxmaio/simpleparsers.startsWithLetter" with input: "¡Hello world!".
 ```
 
 ### KleenePlus
@@ -358,14 +358,14 @@ parser.Parse("¿Why?")
 > nil, err
 
 err.Error()
-> No match found for character with condition: "github.com/cimimuxmaio/simpleparsers.startsWithLetter" and input: "¿Why?".
+> No match found that satisfies the condition: "github.com/cimimuxmaio/simpleparsers.startsWithLetter" with input: "¿Why?".
 
 
 parser.Parse("Yeah!")
 > nil, err
 
 err.Error()
-> No match found for character with condition: "github.com/cimimuxmaio/simpleparsers.startsWithDigit" and input: "Yeah!".
+> No match found that satisfies the condition: "github.com/cimimuxmaio/simpleparsers.startsWithDigit" with input: "Yeah!".
 ```
 
 ### KleeneStar
@@ -435,7 +435,7 @@ parser.Parse("hello there...")
 > nil, err
 
 err.Error()
-> No match found for character with condition: "github.com/cimimuxmaio/simpleparsers.startsWithDigit" and input: "ello there...".
+> No match found that satisfies the condition: "github.com/cimimuxmaio/simpleparsers.startsWithDigit" and input: "ello there...".
 ```
 
 ### Conditional

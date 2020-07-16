@@ -34,8 +34,8 @@ func KleenePlus(parser Parser) Parser {
 }
 
 // Optional :
-// Returns a parser that parses a certain input as the given parser iteratively until there is no more matches.
-// If there is no matches, the parser returns an error.
+// Returns a parser that parses a certain input as the given parser.
+// This new parser can´t fail; if there is no match, the new parser matches with the empty string (`""`).
 func Optional(parser Parser) Parser {
 	return &genericParser{
 		parseMethod: func(input string) (*ParserOutput, error) {

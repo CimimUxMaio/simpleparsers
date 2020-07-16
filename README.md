@@ -103,6 +103,7 @@ where `startsWithDigit` returns true if the head of the string is in fact a _dig
 ```
 digitParser := NewDigitParser()
 
+
 digitParser.Parse("123hello")
 > &ParserOutput{ Match: "1", Remainder: "23hello" }, nil
 
@@ -186,7 +187,7 @@ letterParser.Parse("sample text")
 > nil, err
 
 err.Error()
-> No match found for character with condition: "github.com/cimimuxmaio/simpleparsers.NewCharParser.func1.1" and input: "sample text". // Should be improved
+> No match found that satisfies the condition: "github.com/cimimuxmaio/simpleparsers.NewCharParser.func1" with input: "sample text". // Should be improved
 ```
 
 ### WordParser
@@ -201,11 +202,11 @@ It is equivalent to: [`KleenePlus(NewLetterParser())`](#kleenePlus)
 wordParser := NewWordParser()
 
 wordParser.Parse("hello world!")
-> &ParserOutput{ Match: "hello", Remainder: " world!" }
+> &ParserOutput{ Match: "hello", Remainder: " world!" }, nil
 
 
 wordParser.Parse("Hi987 Wo789!")
-> &ParserOutput{ Match: "Hi", Remainder: "987 Wo789!" }
+> &ParserOutput{ Match: "Hi", Remainder: "987 Wo789!" }, nil
 
 wordParser.Parse("123.0")
 
@@ -226,11 +227,11 @@ It is equivalent to: [`KleenePlus(NewDigitParser())`](#kleenePlus)
 integerParser := NewIntegerParser()
 
 integerParser.Parse("2020")
-> &ParserOutput{ Match: "2020", Remainder: "" }
+> &ParserOutput{ Match: "2020", Remainder: "" }, nil
 
 
 integerParser.Parse("123.0")
-> &ParserOutput{ Match: "123", Remainder: ".0" }
+> &ParserOutput{ Match: "123", Remainder: ".0" }, nil
 
 integerParser.Parse("Hola mundo")
 > nil, err
@@ -259,11 +260,11 @@ It is equivalent to:
 numberParser := NewNumberParser()
 
 numberParser.Parse("2020")
-> &ParserOutput{ Match: "2020", Remainder: "" }
+> &ParserOutput{ Match: "2020", Remainder: "" }, nil
 
 
 numberParser.Parse("123.0")
-> &ParserOutput{ Match: "123.0", Remainder: "" }
+> &ParserOutput{ Match: "123.0", Remainder: "" }, nil
 
 
 numberParser.Parse("999.Nice!")
@@ -290,7 +291,27 @@ If for a certain input either parser fails, the resulting parser of sequencing b
 
 ##### Examples:
 
-**TODO**
+```
+parser := Sequence(NewDigitParser(), NewLetterParser())
+
+
+parser.Parse("1ABC")
+> &ParserOutput{ Match: "1A", Remainder: "BC" }, nil
+
+
+parser.Parse("K9 team")
+> nil, err
+
+err.Error()
+> No match found for character with condition: "github.com/cimimuxmaio/simpleparsers.startsWithDigit" and input: "K9 team".
+
+
+parser.Parse("2020")
+> nil, err
+
+err.Error()
+> No match found for character with condition: "github.com/cimimuxmaio/simpleparsers.startsWithLetter" and input: "020".
+```
 
 ### Either
 
@@ -298,7 +319,24 @@ Given two parsers, returns a new one that parses a certain input as the first on
 
 ##### Examples:
 
-**TODO**
+```
+parser := Either(NewDigitParser(), NewWordParser())
+
+
+parser.Parse("1ABC")
+> &ParserOutput{ Match: "1", Remainder: "ABC" }, nil
+
+
+parser.Parse("ZYX987")
+> &ParserOutput{ Match: "ZYX", Remainder: "987" }, nil
+
+
+parser.Parse("¡Hello world!")
+> nil, err
+
+err.Error()
+> No match found for character with condition: "github.com/cimimuxmaio/simpleparsers.startsWithLetter" and input: "¡Hello world!".
+```
 
 ### KleenePlus
 
@@ -308,7 +346,27 @@ If there is **no** matches, the parser returns an error.
 
 ##### Examples:
 
-**TODO**
+```
+parser := KleenePlus(Sequence(NewWordParser(), NewIntegerParser()))
+
+
+parser.Parse("he12ll34o5wo67rl89d0!")
+> &ParserOutput{ Match: "he12ll34o5wo67rl89d0", Remainder: "!"}, nil
+
+
+parser.Parse("¿Why?")
+> nil, err
+
+err.Error()
+> No match found for character with condition: "github.com/cimimuxmaio/simpleparsers.startsWithLetter" and input: "¿Why?".
+
+
+parser.Parse("Yeah!")
+> nil, err
+
+err.Error()
+> No match found for character with condition: "github.com/cimimuxmaio/simpleparsers.startsWithDigit" and input: "Yeah!".
+```
 
 ### KleeneStar
 
@@ -318,28 +376,67 @@ If there is **no** matches, the parser matches the empty string (`""`).
 
 ##### Examples:
 
-**TODO**
+```
+parser := KleeneStar(Sequence(NewWordParser(), NewIntegerParser()))
+
+
+parser.Parse("he12ll34o5wo67rl89d0!")
+> &ParserOutput{ Match: "he12ll34o5wo67rl89d0", Remainder: "!"}, nil
+
+
+parser.Parse("¿Why?")
+> &ParserOutput{ Match: "", Remainder: "¿Why?"}, nil
+
+
+parser.Parse("Yeah!")
+> &ParserOutput{ Match: "", Remainder: "Yeah!"}, nil
+```
 
 ### Optional
 
-Returns a parser that parses a certain input as the given parser iteratively until there is no more matches.
+Returns a parser that parses a certain input as the given parser.
+This new parser can´t fail.
 
-If there is **no** matches, the parser returns an error.
+If there is no match, the new parser matches with the empty string (`""`).
 
 ##### Examples:
 
-**TODO**
+```
+parser := Optional(NewDigitParser())
+
+
+parser.Parse("123")
+> &ParserOutput{ Match: "1", Remainder: "23" }, nil
+
+
+parser.Parse("this won't fail")
+> &ParserOutput{ Match: "", Remainder: "this won't fail" }, nil
+```
 
 ### Consume
 
 Returns a parser that parses a certain input as the given parser.
 
 If it matches, ignores the matching string, returning: `&ParserOutput{ Match: "", Remainder: remainder }`
+
 If there is **no** match, returns an error.
 
 ##### Examples:
 
-**TODO**
+```
+parser := KleenePlus(Sequence(NewLetterParser(), Consume(NewDigitParser())))
+
+
+parser.Parse("H1e2l3l4o5W6o7r8l9d0")
+> &ParserOutput{ Match: "HelloWorld", Remainder: "" }, nil
+
+
+parser.Parse("hello there...")
+> nil, err
+
+err.Error()
+> No match found for character with condition: "github.com/cimimuxmaio/simpleparsers.startsWithDigit" and input: "ello there...".
+```
 
 ### Conditional
 
@@ -349,4 +446,17 @@ It will only match with strings that satisfy the given condition.
 
 ##### Examples:
 
-**TODO**
+```
+parser := Conditional(NewWordParser(), func(match string)bool { return len(match) > 10 })
+
+
+parser.Parse("AVeryLongWord!")
+> &ParserOutput{ Match: "AVeryLongWord", Remainder: "!" }, nil
+
+
+parser.Parse("short")
+> nil, err
+
+err.Error()
+> No match found that satisfies the condition: <condition> with input: "short".
+```

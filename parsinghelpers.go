@@ -66,24 +66,6 @@ func parseIterativelyAtLeastOnce(parser Parser, input string) (*ParserOutput, er
 	return &ParserOutput{Match: longuestMatch, Remainder: remainder}, nil
 }
 
-// func parseWithCondition(input string, condition func(match string) bool) (*ParserOutput, error) {
-// 	errNoMatch := errors.New("No match found for character with condition: " + runtime.FuncForPC(reflect.ValueOf(condition).Pointer()).Name() + " and input: \"" + input + "\".")
-// 	if len(input) == 0 {
-// 		return nil, errNoMatch
-// 	}
-
-// 	head := rune(input[0])
-
-// 	if !condition(head) {
-// 		return nil, errNoMatch
-// 	}
-
-// 	match := string(head)
-// 	output := &ParserOutput{Match: match, Remainder: strings.TrimPrefix(input, match)}
-
-// 	return output, nil
-// }
-
 func parseWithCondition(input string, parser Parser, condition func(string) bool) (*ParserOutput, error) {
 	output, err := parser.Parse(input)
 
@@ -92,20 +74,12 @@ func parseWithCondition(input string, parser Parser, condition func(string) bool
 	}
 
 	if !condition(output.Match) {
-		errNoMatch := errors.New("no match found for character with condition: " + runtime.FuncForPC(reflect.ValueOf(condition).Pointer()).Name() + " and input: \"" + input + "\"")
+		errNoMatch := errors.New("no match found that satisfies the condition: " + runtime.FuncForPC(reflect.ValueOf(condition).Pointer()).Name() + " with input: \"" + input + "\"")
 		return nil, errNoMatch
 	}
 
 	return output, nil
 }
-
-// func parseDigit(input string) (*ParserOutput, error) {
-// 	return parseWithCondition(input, unicode.IsDigit)
-// }
-
-// func parseLetter(input string) (*ParserOutput, error) {
-// 	return parseWithCondition(input, unicode.IsLetter)
-// }
 
 func parseOptionaly(input string, parser Parser) (*ParserOutput, error) {
 	output, err := parser.Parse(input)

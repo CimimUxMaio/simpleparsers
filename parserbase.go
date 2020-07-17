@@ -19,7 +19,7 @@ type ParserOutput struct {
 }
 
 // AsString - formats a *ParserOutput to a string.
-func (poutput *ParserOutput) AsString() string {
+func (poutput *ParserOutput) String() string {
 	return "{ Match: " + poutput.Match + ", Remainder: " + poutput.Remainder + " }"
 }
 

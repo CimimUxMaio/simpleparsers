@@ -19,9 +19,9 @@ func assertEqualsParserOutput(t *testing.T, input string, expectedOutput *simple
 	if expectedOutput == nil || actualOutput == nil {
 		if expectedOutput != actualOutput {
 			if expectedOutput == nil {
-				throwTestFail(t, input, nil, actualOutput.AsString())
+				throwTestFail(t, input, nil, actualOutput.String())
 			} else {
-				throwTestFail(t, input, expectedOutput.AsString(), nil)
+				throwTestFail(t, input, expectedOutput.String(), nil)
 			}
 		}
 
@@ -29,7 +29,7 @@ func assertEqualsParserOutput(t *testing.T, input string, expectedOutput *simple
 	}
 
 	if !expectedOutput.Equals(actualOutput) {
-		throwTestFail(t, input, expectedOutput.AsString(), actualOutput.AsString())
+		throwTestFail(t, input, expectedOutput.String(), actualOutput.String())
 	}
 }
 

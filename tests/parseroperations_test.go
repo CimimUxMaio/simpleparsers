@@ -62,7 +62,7 @@ func TestKleenePlus(t *testing.T) {
 		stringParserOutputTestCase{"+&%$$asd123", nil},
 	}
 
-	assertAllEqualsParserOutput(t, simpleparsers.KleenePlus(alfaNumCharParser), testCases)
+	assertAllEqualsParserOutput(t, simpleparsers.KleenePlus(alphaNumCharParser), testCases)
 }
 
 func TestKleeneStar(t *testing.T) {
@@ -74,7 +74,7 @@ func TestKleeneStar(t *testing.T) {
 		stringParserOutputTestCase{"+&%$$asd123", newParserOutput("", "+&%$$asd123")},
 	}
 
-	assertAllEqualsParserOutput(t, simpleparsers.KleeneStar(alfaNumCharParser), testCases)
+	assertAllEqualsParserOutput(t, simpleparsers.KleeneStar(alphaNumCharParser), testCases)
 }
 
 func TestOptional(t *testing.T) {
@@ -147,10 +147,10 @@ func TestEnclose(t *testing.T) {
 		stringParserOutputTestCase{"Bye!</h2>", nil},
 	}
 
-	prefix := simpleparsers.Enclose(simpleparsers.KleenePlus(alfaNumCharParser), simpleparsers.NewCharParser('<'), simpleparsers.NewCharParser('>'))
+	prefix := simpleparsers.Enclose(simpleparsers.KleenePlus(alphaNumCharParser), simpleparsers.NewCharParser('<'), simpleparsers.NewCharParser('>'))
 
 	closer := simpleparsers.Sequence(simpleparsers.NewCharParser('<'), simpleparsers.NewCharParser('/'))
-	suffix := simpleparsers.Enclose(simpleparsers.KleenePlus(alfaNumCharParser), closer, simpleparsers.NewCharParser('>'))
+	suffix := simpleparsers.Enclose(simpleparsers.KleenePlus(alphaNumCharParser), closer, simpleparsers.NewCharParser('>'))
 
 	parser := simpleparsers.Enclose(wordParser, prefix, suffix)
 	assertAllEqualsParserOutput(t, parser, testCases)

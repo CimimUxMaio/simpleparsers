@@ -7,13 +7,25 @@ import (
 )
 
 var (
-	digitParser       simpleparsers.Parser = simpleparsers.NewDigitParser()
-	letterParser      simpleparsers.Parser = simpleparsers.NewLetterParser()
-	alfaNumCharParser simpleparsers.Parser = simpleparsers.NewAlphanumericParser()
-	wordParser        simpleparsers.Parser = simpleparsers.NewWordParser()
-	integerParser     simpleparsers.Parser = simpleparsers.NewIntegerParser()
-	numberParser      simpleparsers.Parser = simpleparsers.NewNumberParser()
+	anyCharParser      simpleparsers.Parser = simpleparsers.NewAnyCharParser()
+	digitParser        simpleparsers.Parser = simpleparsers.NewDigitParser()
+	letterParser       simpleparsers.Parser = simpleparsers.NewLetterParser()
+	alphaNumCharParser simpleparsers.Parser = simpleparsers.NewAlphanumericParser()
+	wordParser         simpleparsers.Parser = simpleparsers.NewWordParser()
+	integerParser      simpleparsers.Parser = simpleparsers.NewIntegerParser()
+	numberParser       simpleparsers.Parser = simpleparsers.NewNumberParser()
 )
+
+func TestAnyCharParser(t *testing.T) {
+	var testCases []stringParserOutputTestCase = []stringParserOutputTestCase{
+		stringParserOutputTestCase{"1asdasd", newParserOutput("1", "asdasd")},
+		stringParserOutputTestCase{"a21341", newParserOutput("a", "21341")},
+		stringParserOutputTestCase{"%!#$%&", newParserOutput("%", "!#$%&")},
+		stringParserOutputTestCase{"", nil},
+	}
+
+	assertAllEqualsParserOutput(t, anyCharParser, testCases)
+}
 
 func TestDigitParser(t *testing.T) {
 	var testCases []stringParserOutputTestCase = []stringParserOutputTestCase{
@@ -51,7 +63,7 @@ func TestAlfanumericParser(t *testing.T) {
 		stringParserOutputTestCase{"$a245", nil},
 	}
 
-	assertAllEqualsParserOutput(t, alfaNumCharParser, testCases)
+	assertAllEqualsParserOutput(t, alphaNumCharParser, testCases)
 }
 
 func TestWordParser(t *testing.T) {

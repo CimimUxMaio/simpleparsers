@@ -100,3 +100,17 @@ func parseAndIgnoreMatch(input string, parser Parser) (*ParserOutput, error) {
 
 	return &ParserOutput{Match: "", Remainder: output.Remainder}, nil
 }
+
+func parseExactly(input string, parser Parser) (output *ParserOutput, err error) {
+	output, err = parser.Parse(input)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if output.Remainder != "" {
+		return nil, errors.New("no exact match for input: " + input)
+	}
+
+	return output, nil
+}

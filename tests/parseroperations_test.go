@@ -100,3 +100,34 @@ func TestConditional(t *testing.T) {
 	parser := simpleparsers.Conditional(digitParser, greaterThanFive)
 	assertAllEqualsParserOutput(t, parser, testCases)
 }
+
+func TestExact(t *testing.T) {
+	var testCases []stringParserOutputTestCase = []stringParserOutputTestCase{
+		stringParserOutputTestCase{"9201", newParserOutput("9201", "")},
+		stringParserOutputTestCase{"19.50", newParserOutput("19.50", "")},
+		stringParserOutputTestCase{"60hi", nil},
+		stringParserOutputTestCase{"banana", nil},
+		stringParserOutputTestCase{"5.50bye", nil},
+	}
+
+	parser := simpleparsers.Exact(numberParser)
+	assertAllEqualsParserOutput(t, parser, testCases)
+}
+
+func TestEnclose(t *testing.T) {
+	var testCases []stringParserOutputTestCase = []stringParserOutputTestCase{
+		stringParserOutputTestCase{"<h1>SomeTitle</h1>", newParserOutput("SomeTitle", "")},
+		stringParserOutputTestCase{"<h2>Subtitle</h2> // A comment", newParserOutput("Subtitle", " // A comment")},
+		stringParserOutputTestCase{"", nil},
+		stringParserOutputTestCase{"<h2>Hello!", nil},
+		stringParserOutputTestCase{"Bye!</h2>", nil},
+	}
+
+	prefix := simpleparsers.Enclose(simpleparsers.KleenePlus(alfaNumCharParser), simpleparsers.NewCharParser('<'), simpleparsers.NewCharParser('>'))
+
+	closer := simpleparsers.Sequence(simpleparsers.NewCharParser('<'), simpleparsers.NewCharParser('/'))
+	suffix := simpleparsers.Enclose(simpleparsers.KleenePlus(alfaNumCharParser), closer, simpleparsers.NewCharParser('>'))
+
+	parser := simpleparsers.Enclose(wordParser, prefix, suffix)
+	assertAllEqualsParserOutput(t, parser, testCases)
+}

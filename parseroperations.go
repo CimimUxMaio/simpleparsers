@@ -73,3 +73,21 @@ func Conditional(parser Parser, condition func(match string) bool) Parser {
 		},
 	}
 }
+
+// Exact :
+// Returns a parser that parses a certain input as the given parser but will also
+// return an error if there is a remainder diferent thant the empty string (`""`)
+func Exact(parser Parser) Parser {
+	return &genericParser{
+		parseMethod: func(input string) (*ParserOutput, error) {
+			return parseExactly(input, parser)
+		},
+	}
+}
+
+// Enclose :
+// Returns a parser that parses a certain input as the given parser but _consuming_ at the begining, and
+// at the end a certain prefix and suffix parser.
+func Enclose(parser Parser, prefix Parser, suffix Parser) Parser {
+	return Sequence(Sequence(Consume(prefix), parser), Consume(suffix))
+}

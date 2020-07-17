@@ -30,6 +30,8 @@ Just a fun project for learning Go :D
 - [Optional/1](#optional)
 - [Consume/1](#consume)
 - [Conditional/2](#conditional)
+- [Exact/1](#exact)
+- [Enclose/3](#enclose)
 
 ---
 
@@ -461,4 +463,65 @@ parser.Parse("short")
 
 err.Error()
 > No match found that satisfies the condition: <condition> with input: "short".
+```
+
+### Exact
+
+Returns a parser that parses a certain input as the given parser but will also return an error if there is a remainder diferent thant the empty string (`""`)
+
+##### Example
+
+```
+parser := NewNumberParser()
+
+parser.Parse("1.3333333")
+> &ParserOutput{ Match: "1.3333333", Remainder: "" }
+
+
+parser.Parse("123bananas")
+> nil, err
+
+err.Error()
+> No exact match for input: "123bananas".
+```
+
+### Enclose
+
+Returns a parser that parses a certain input as the given parser but _consuming_ at the begining, and at the end a certain prefix and suffix parser.
+
+##### See:
+
+- [Consume/1](#consume)
+
+##### Examples:
+
+```
+alphaNum := NewAlphaNumericParser()
+prefix := Enclose(KleenePlus(alphaNum), NewCharParser('<'), NewCharParser('<'))
+
+closer := Sequence(NewCharParser('<'), NewCharParser('/'))
+suffix := Enclose(KleenePlus(alphaNum), closer, NewCharParser('>'))
+
+parser := Enclose(wordParser, prefix, suffix)
+
+parser.Parse("<h1>SomeTitle</h1>")
+> &ParserOutput{ Match: "SomeTitle", Remainder: "" }, nil
+
+
+parser.Parse("<h2>Subtitle</h2> // A comment.")
+> &ParserOutput{ Match: "Subtitle", Remainder: " // A comment." }, nil
+
+
+parser.Parse("<h1>BadTitle")
+> nil, err
+
+err.Error()
+> No match found that satisfies the condition: "github.com/cimimuxmaio/simpleparsers.NewCharParser.func1" with input: "".
+
+
+parser.Parse("Bye!</h2>")
+> nil, err
+
+err.Error()
+> No match found that satisfies the condition: "github.com/cimimuxmaio/simpleparsers.NewCharParser.func1" with input: "Bye!</h2>".
 ```

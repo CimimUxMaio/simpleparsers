@@ -289,9 +289,9 @@ err.Error()
 
 ### Sequence
 
-Given two parsers, returns a new one that parses as the two parsers consecutively, using the remainder of the first one as input for the second.
+Given multiple parsers, returns a new one that parses as all of them consecutively in order, using the remainder of the first one as input for the second.
 
-If for a certain input either parser fails, the resulting parser of sequencing both will also fail for this input.
+If for a certain input either parser fails, the resulting parser of sequencing them will also fail for this input.
 
 ##### Examples:
 
@@ -319,7 +319,9 @@ err.Error()
 
 ### Either
 
-Given two parsers, returns a new one that parses a certain input as the first one. If it fails, parses as the second. If both fail then this parser will also fail.
+Given multiple parsers, returns a new one that parses a certain input as the first one. If it fails, parses as the second, and so on in order.
+
+If all fail then this parser will also fail.
 
 ##### Examples:
 

@@ -18,6 +18,18 @@ func TestSequence(t *testing.T) {
 	assertAllEqualsParserOutput(t, simpleparsers.Sequence(integerParser, wordParser), testCases)
 }
 
+func TestSequenceVariadic(t *testing.T) {
+	var testCases []stringParserOutputTestCase = []stringParserOutputTestCase{
+		stringParserOutputTestCase{"12312hola!++", newParserOutput("12312hola!", "++")},
+		stringParserOutputTestCase{"1a!123", newParserOutput("1a!", "123")},
+		stringParserOutputTestCase{"987hello#", nil},
+		stringParserOutputTestCase{"hola123", nil},
+		stringParserOutputTestCase{"", nil},
+	}
+
+	assertAllEqualsParserOutput(t, simpleparsers.Sequence(integerParser, wordParser, simpleparsers.NewCharParser('!')), testCases)
+}
+
 func TestEither(t *testing.T) {
 	var testCases []stringParserOutputTestCase = []stringParserOutputTestCase{
 		stringParserOutputTestCase{"1a23", newParserOutput("1", "a23")},
@@ -27,6 +39,18 @@ func TestEither(t *testing.T) {
 	}
 
 	assertAllEqualsParserOutput(t, simpleparsers.Either(digitParser, wordParser), testCases)
+}
+
+func TestEitherVariadic(t *testing.T) {
+	var testCases []stringParserOutputTestCase = []stringParserOutputTestCase{
+		stringParserOutputTestCase{"1a23", newParserOutput("1", "a23")},
+		stringParserOutputTestCase{"world2!5", newParserOutput("world", "2!5")},
+		stringParserOutputTestCase{"?Hi", newParserOutput("?", "Hi")},
+		stringParserOutputTestCase{"", nil},
+		stringParserOutputTestCase{"+&%$$asd123", nil},
+	}
+
+	assertAllEqualsParserOutput(t, simpleparsers.Either(digitParser, wordParser, simpleparsers.NewCharParser('?')), testCases)
 }
 
 func TestKleenePlus(t *testing.T) {

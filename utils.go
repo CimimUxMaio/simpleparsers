@@ -23,3 +23,13 @@ func startsWithLetter(match string) bool {
 func startsWithChar(match string, char rune) bool {
 	return startsWith(match, func(head rune) bool { return head == char })
 }
+
+func reduceParser(operation func(Parser, Parser) Parser, parsers ...Parser) Parser {
+	result, otherParsers := parsers[0], parsers[1:]
+
+	for _, p := range otherParsers {
+		result = operation(result, p)
+	}
+
+	return result
+}

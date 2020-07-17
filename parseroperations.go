@@ -1,25 +1,17 @@
 package simpleparsers
 
 // Sequence :
-// Given two parsers, returns a new one that parses as the two parsers consecutively, using the remainder of the first one as input for the second.
-// If for a certain input either parser fails, the resulting parser of sequencing both will also fail for this input.
-func Sequence(parser1 Parser, parser2 Parser) Parser {
-	return &genericParser{
-		parseMethod: func(input string) (*ParserOutput, error) {
-			return parseConsecutively(parser1, parser2, input)
-		},
-	}
+// Given multiple parsers, returns a new one that parses as all of them consecutively in order, using the remainder of the first one as input for the second.
+// If for a certain input either parser fails, the resulting parser of sequencing them will also fail for this input.
+func Sequence(parsers ...Parser) Parser {
+	return reduceParser(sequenceSimple, parsers...)
 }
 
 // Either :
-// Given two parsers, returns a new one that parses a certain input as the first one. If it fails, parses as the second.
-// If both fail then this parser will also fail.
-func Either(parser1 Parser, parser2 Parser) Parser {
-	return &genericParser{
-		parseMethod: func(input string) (*ParserOutput, error) {
-			return parseWithEither(parser1, parser2, input)
-		},
-	}
+// Given multiple parsers, returns a new one that parses a certain input as the first one. If it fails, parses as the second, and so on in order.
+// If all fail then this parser will also fail.
+func Either(parsers ...Parser) Parser {
+	return reduceParser(eitherSimple, parsers...)
 }
 
 // KleenePlus :
@@ -91,3 +83,6 @@ func Exact(parser Parser) Parser {
 func Enclose(parser Parser, prefix Parser, suffix Parser) Parser {
 	return Sequence(Sequence(Consume(prefix), parser), Consume(suffix))
 }
+
+// SequenceAll :
+//

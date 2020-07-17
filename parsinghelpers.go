@@ -37,6 +37,14 @@ func parseConsecutively(parser1 Parser, parser2 Parser, input string) (*ParserOu
 	return &ParserOutput{Match: output1.Match + output2.Match, Remainder: output2.Remainder}, nil
 }
 
+func sequenceSimple(parser1 Parser, parser2 Parser) Parser {
+	return &genericParser{
+		parseMethod: func(input string) (*ParserOutput, error) {
+			return parseConsecutively(parser1, parser2, input)
+		},
+	}
+}
+
 func parseWithEither(parser1 Parser, parser2 Parser, input string) (*ParserOutput, error) {
 	output, err := parser1.Parse(input)
 
@@ -45,6 +53,14 @@ func parseWithEither(parser1 Parser, parser2 Parser, input string) (*ParserOutpu
 	}
 
 	return output, err
+}
+
+func eitherSimple(parser1 Parser, parser2 Parser) Parser {
+	return &genericParser{
+		parseMethod: func(input string) (*ParserOutput, error) {
+			return parseWithEither(parser1, parser2, input)
+		},
+	}
 }
 
 func parseIterativelyAtLeastOnce(parser Parser, input string) (*ParserOutput, error) {

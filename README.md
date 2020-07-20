@@ -23,8 +23,8 @@ Just a fun project for learning Go :D
 
 ## Parser operations
 
-- [Sequence/2](#sequence)
-- [Either/2](#either)
+- [Sequence/*](#sequence)
+- [Either/*](#either)
 - [KleenePlus/1](#kleenePlus)
 - [KleeneStar/1](#kleeneStar)
 - [Optional/1](#optional)
@@ -116,7 +116,7 @@ digitParser.Parse("hello")
 > nil, err
 
 err.Error()
-> No match found that satisfies the condition:: "github.com/cimimuxmaio/simpleparsers.startsWithDigit" with input: "hello".
+> No match found that satisfies the condition: "github.com/cimimuxmaio/simpleparsers.startsWithDigit" with input: "hello".
 ```
 
 ### LetterParser
